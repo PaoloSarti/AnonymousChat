@@ -39,9 +39,7 @@ public class DiffieHellman {
             kpg.initialize(param);
 
             init(kpg);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
     }
@@ -60,9 +58,7 @@ public class DiffieHellman {
             KeyFactory kf = KeyFactory.getInstance("DiffieHellman");
             this.kp = new KeyPair(kf.generatePublic(pubSpec), kf.generatePrivate(privSpec));
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
     }
@@ -80,9 +76,7 @@ public class DiffieHellman {
             this.Y = kspec.getY();
             this.X = pkspec.getX();
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
     }
@@ -90,7 +84,7 @@ public class DiffieHellman {
     public static DiffieHellman load(String fileName, boolean refresh){
         Properties p = new Properties();
 
-        DiffieHellman dh = null;
+        DiffieHellman dh;
 
         try {
             p.load(new FileInputStream(fileName));
@@ -159,15 +153,9 @@ public class DiffieHellman {
      */
     public SecretKey getK(BigInteger otherY, int bits, String algorithm){
         int bytes = bits/8;
-        byte[] key = new byte[bytes];
         byte[] biKey = getK(otherY).toByteArray();
 
-        //the most significant
-        for(int i=0; i<bytes; i++){
-            key[i]=biKey[i];
-        }
-
-        return  new SecretKeySpec(key, algorithm);
+        return  new SecretKeySpec(biKey,0, bytes, algorithm);
     }
 
     public void print(){
