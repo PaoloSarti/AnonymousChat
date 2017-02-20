@@ -54,6 +54,14 @@ public class ChatUtils {
             //Read the other's Y
             String sY = inSocket.readUTF();
 
+            //System.out.println("Public parameter received: "+sY);
+            System.out.println("Public parameter received");
+            SecretKey key = dh.getK(new BigInteger(sY), 128, algorithm);
+
+            //System.out.println("Shared secret key: "+dh.getK(new BigInteger(sY)));
+            System.out.println("Shared secret key calculated");
+            System.out.println("Key length: "+key.getEncoded().length*8+"\n");
+
             //Share initialization vector
             IvParameterSpec iv;
             if(sendIv){
@@ -69,13 +77,6 @@ public class ChatUtils {
                 System.out.println("Received IV: "+ivString);
             }
 
-            //System.out.println("Public parameter received: "+sY);
-            System.out.println("Public parameter received");
-            SecretKey key = dh.getK(new BigInteger(sY), 128, algorithm);
-
-            //System.out.println("Shared secret key: "+dh.getK(new BigInteger(sY)));
-            System.out.println("Shared secret key calculated");
-            System.out.println("Key length: "+key.getEncoded().length*8+"\n");
             System.out.println("Start Chat");
             ChatUtils.listenInput(inSocket, key, iv, algorithm);
             System.out.print(">");
