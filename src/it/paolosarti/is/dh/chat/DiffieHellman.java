@@ -155,7 +155,7 @@ public class DiffieHellman {
         int bytes = bits/8;
         byte[] biKey = getK(otherY).toByteArray();
 
-        return  new SecretKeySpec(biKey,0, bytes, algorithm);
+        return  new SecretKeySpec(biKey,0, bytes, algorithm.split("/")[0]);
     }
 
     public void print(){

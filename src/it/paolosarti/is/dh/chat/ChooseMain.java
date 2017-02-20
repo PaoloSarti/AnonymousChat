@@ -10,7 +10,7 @@ public class ChooseMain {
     private static String address = "localhost";
     private static int port = 3000;
     private static final String fileName = "dh.properties";
-    private static final String algorithm = "AES";
+    private static final String algorithm = "AES/CBC/PKCS5Padding";
 
     public static void main(String[] args){
         if(args.length!=1){
@@ -36,7 +36,7 @@ public class ChooseMain {
                     Socket server = new Socket(address, port);
                     System.out.println("Connected");
 
-                    ChatUtils.chatOnSocket(server, dh, algorithm);
+                    ChatUtils.chatOnSocket(server, dh, algorithm, false);
 
                     System.out.println("Connect to: ("+address+":"+port+")");
                 }
@@ -64,7 +64,7 @@ public class ChooseMain {
                 while((line=br.readLine())!=null) {
 
                     System.out.println("New connection on port: " + client.getLocalPort() + "\n");
-                    ChatUtils.chatOnSocket(client, dh, algorithm);
+                    ChatUtils.chatOnSocket(client, dh, algorithm, true);
 
                     System.out.println("Continue listening? (ctrl+D or ctrl+Z) to refuse and exit");
                     line=br.readLine();
