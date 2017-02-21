@@ -1,6 +1,6 @@
 package it.paolosarti.is.dh.chat;
 
-import it.paolosarti.is.DiffieHellman;
+import it.paolosarti.is.dh.DiffieHellman;
 import it.paolosarti.is.sim.CryptUtils;
 import it.paolosarti.is.sim.StringDecryptor;
 import it.paolosarti.is.sim.StringEncryptor;
@@ -63,28 +63,41 @@ public class ChatUtils {
             System.out.println("Shared secret key calculated");
             System.out.println("Key length: "+key.getEncoded().length*8+"\n");
 
-            //Share initialization vector
-            IvParameterSpec iv;
+            //Share initialization vectors
+            IvParameterSpec iv1;
+            IvParameterSpec iv2;
             if(sendIv){
-                iv = CryptUtils.generateIv(16);
-                String ivString = CryptUtils.ivToString(iv);
-                outSocket.writeUTF(ivString);
+                iv1 = CryptUtils.generateIv(16);
+                iv2 = CryptUtils.generateIv(16);
+                String ivString1 = CryptUtils.ivToString(iv1);
+                String ivString2 = CryptUtils.ivToString(iv2);
+                outSocket.writeUTF(ivString1);
+                outSocket.writeUTF(ivString2);
                 outSocket.flush();
-                System.out.println("Sent IV: "+ivString);
+                System.out.println("Sent IV1: "+ivString1);
+                System.out.println("Sent IV2: "+ivString1);
             }
             else {
-                String ivString = inSocket.readUTF();
-                iv = CryptUtils.ivFromString(ivString);
-                System.out.println("Received IV: "+ivString);
+                String ivString1 = inSocket.readUTF();
+                String ivString2 = inSocket.readUTF();
+                iv1 = CryptUtils.ivFromString(ivString1);
+                iv2 = CryptUtils.ivFromString(ivString2);
+                System.out.println("Received IV1: "+ivString1);
+                System.out.println("Received IV2: "+ivString2);
             }
 
             System.out.println("Start Chat");
-            ChatUtils.listenInput(inSocket, key, iv, algorithm);
+            ChatUtils.listenInput(inSocket, key, sendIv?iv2:iv1, algorithm);
             System.out.print(">");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String line;
-            StringEncryptor se = new StringEncryptor(key, iv, algorithm);
+            StringEncryptor se;
+            if(sendIv)
+                se = new StringEncryptor(key, iv1, algorithm);
+            else
+                se = new StringEncryptor(key, iv2, algorithm);
+
             while((line = br.readLine())!= null){
                 String encrypted = se.encrypt(line);
                 System.out.println("Encrypted string to send: "+encrypted);

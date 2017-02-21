@@ -1,6 +1,7 @@
 package it.paolosarti.is.dh.chat;
 
-import it.paolosarti.is.DiffieHellman;
+
+import it.paolosarti.is.dh.DiffieHellman;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -31,7 +31,7 @@ public class CryptUtils {
         return new IvParameterSpec(Base64.getDecoder().decode(ivString));
     }
 
-    public static SecretKey calcMasterKey(SecretKey pre_master_secret, BigInteger ra, BigInteger rb ){
+    public static SecretKey concatMasterKey(SecretKey pre_master_secret, BigInteger ra, BigInteger rb ){
         byte[] raBytes = ra.toByteArray();
         byte[] rbBytes = rb.toByteArray();
         byte[] preBytes = pre_master_secret.getEncoded();
