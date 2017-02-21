@@ -9,17 +9,22 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ChooseMain {
+public class ChatMain {
     private static String address = "localhost";
     private static int port = 3000;
     private static final String fileName = "dh.properties";
     private static final String algorithm = "AES/CBC/PKCS5Padding";
 
     public static void main(String[] args){
-        if(args.length!=1){
-            System.out.println("USAGE: java -jar AnonymousChat (client|c)|(server|s)");
+        if(!(args.length==1) && !(args.length!=2)){
+            System.out.println("USAGE: java -jar AnonymousChat (client|c)|(server|s) [debug]");
             System.exit(1);
         }
+
+        boolean debug = false;
+
+        if(args.length==2 && args[1].equals("debug"))
+            debug = true;
 
         DiffieHellman dh = DiffieHellman.load(fileName);
 
@@ -39,11 +44,12 @@ public class ChooseMain {
                     Socket server = new Socket(address, port);
                     System.out.println("Connected");
 
-                    ChatUtils.chatOnSocket(server, dh, algorithm, false);
+                    Chat chat = new Chat(server, dh, algorithm, false, debug);
+                    chat.chatOnSocket();
 
                     System.out.println("Connect to: ("+address+":"+port+")");
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -67,7 +73,8 @@ public class ChooseMain {
                 while((line=br.readLine())!=null) {
 
                     System.out.println("New connection on port: " + client.getLocalPort() + "\n");
-                    ChatUtils.chatOnSocket(client, dh, algorithm, true);
+                    Chat chat = new Chat(client, dh, algorithm, true, debug);
+                    chat.chatOnSocket();
 
                     System.out.println("Continue listening? (ctrl+D or ctrl+Z) to refuse and exit");
                     line=br.readLine();
@@ -78,7 +85,7 @@ public class ChooseMain {
                     System.out.println("Accept chat? (ctrl+D or ctrl+Z) to refuse and exit");
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

@@ -31,7 +31,7 @@ public class CryptUtils {
         return new IvParameterSpec(Base64.getDecoder().decode(ivString));
     }
 
-    public static SecretKey concatMasterKey(SecretKey pre_master_secret, BigInteger ra, BigInteger rb ){
+    public static SecretKey calculateMasterSecret(SecretKey pre_master_secret, BigInteger ra, BigInteger rb ){
         byte[] raBytes = ra.toByteArray();
         byte[] rbBytes = rb.toByteArray();
         byte[] preBytes = pre_master_secret.getEncoded();
@@ -49,6 +49,25 @@ public class CryptUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Get num init vectors of nBytes from a SecureRandom seeded with a master key
+     * @param key
+     * @param num
+     * @param nBytes
+     * @return
+     */
+    public static IvParameterSpec[] createIvsFromKey(SecretKey key, int num, int nBytes){
+        SecureRandom rand = new SecureRandom(key.getEncoded());
+        IvParameterSpec[] ivs = new IvParameterSpec[num];
+
+        for(int i=0; i<num; i++){
+            byte[] bytes = new byte[nBytes];
+            rand.nextBytes(bytes);
+            ivs[i] = new IvParameterSpec(bytes);
+        }
+        return ivs;
     }
 
     public static String padWithSpaces(String s, int desiredLength){
