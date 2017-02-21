@@ -1,5 +1,6 @@
 package it.paolosarti.is.dh.chat;
 
+import it.paolosarti.is.DiffieHellman;
 import it.paolosarti.is.sim.CryptUtils;
 import it.paolosarti.is.sim.StringDecryptor;
 import it.paolosarti.is.sim.StringEncryptor;
