@@ -5,8 +5,12 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -27,6 +31,26 @@ public class CryptUtils {
         return new IvParameterSpec(Base64.getDecoder().decode(ivString));
     }
 
+    public static SecretKey calcMasterKey(SecretKey pre_master_secret, BigInteger ra, BigInteger rb ){
+        byte[] raBytes = ra.toByteArray();
+        byte[] rbBytes = rb.toByteArray();
+        byte[] preBytes = pre_master_secret.getEncoded();
+        byte[] concatBytes = new byte[raBytes.length+rbBytes.length+preBytes.length];
+        System.arraycopy(raBytes, 0, concatBytes, 0, raBytes.length);
+        System.arraycopy(rbBytes, 0, concatBytes, raBytes.length, rbBytes.length);
+        System.arraycopy(preBytes, 0, concatBytes, raBytes.length+rbBytes.length, preBytes.length);
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digested = md.digest(concatBytes);
+            SecretKeySpec key = new SecretKeySpec(digested, 0, 16, "AES");
+            return key;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String padWithSpaces(String s, int desiredLength){
         int off = desiredLength-s.length();
         int toAdd = off>0?off:0;
@@ -41,4 +65,5 @@ public class CryptUtils {
         int desiredlength = (s.length()/mult+2)*mult;
         return padWithSpaces(s, desiredlength);
     }
+
 }
