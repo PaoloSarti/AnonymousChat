@@ -1,4 +1,4 @@
-package it.paolosarti.is.dh.chat;
+package it.paolosarti.is.dh;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.DHParameterSpec;
