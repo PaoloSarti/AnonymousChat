@@ -16,7 +16,7 @@ public class ChatMain {
     private static final String algorithm = "AES/CBC/PKCS5Padding";
 
     public static void main(String[] args){
-        if(!(args.length==1) && !(args.length!=2)){
+        if(!(args.length==1 || args.length==2)){
             System.out.println("USAGE: java -jar AnonymousChat (client|c)|(server|s) [debug]");
             System.exit(1);
         }

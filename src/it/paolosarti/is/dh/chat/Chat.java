@@ -56,7 +56,7 @@ public class Chat {
             //Calculate the master secret
             SecretKey master_secret = CryptUtils.calculateMasterSecret(pre_master_key, server?rands[0]:rands[1], server?rands[1]:rands[0]);
 
-            System.out.println("Shared master secret master_secret calculated");
+            System.out.println("Shared master secret calculated");
             if(debug)
                 System.out.println("Key length: "+master_secret.getEncoded().length*8+"\n");
 
