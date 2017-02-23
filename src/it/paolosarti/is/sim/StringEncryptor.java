@@ -25,8 +25,8 @@ public class StringEncryptor extends  StringCrypto{
 
     public String encrypt(String message){
         try {
-            String paddedWithSpacesXD = CryptUtils.padWithSpacesMultiple(message, 16);
-            byte[] strBytes = paddedWithSpacesXD.getBytes("UTF-8");
+            String paddedWithSpaces = CryptUtils.padWithSpacesMultiple(message, 16);
+            byte[] strBytes = paddedWithSpaces.getBytes("UTF-8");
             byte[] encrypted = cipher.update(strBytes);
             //System.out.println("encrypted string:" + Base64.getEncoder().encodeToString(encrypted));
             return Base64.getEncoder().encodeToString(encrypted);
