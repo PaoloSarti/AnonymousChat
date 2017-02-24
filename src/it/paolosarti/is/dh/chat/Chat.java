@@ -96,7 +96,7 @@ public class Chat {
         SecureRandom sr = new SecureRandom();
 
         //create the first one
-        bigs[0] = new BigInteger(128, sr);
+        bigs[0] = new BigInteger(1024, sr);
         //and send it
         if(debug)
             System.out.println("Sending generated random: "+bigs[0]);
