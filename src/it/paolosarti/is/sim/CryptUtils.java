@@ -71,7 +71,7 @@ public class CryptUtils {
     }
 
     public static String padWithSpaces(String s, int desiredLength){
-        int off = desiredLength-s.length();
+        int off = desiredLength-s.getBytes().length;
         int toAdd = off>0?off:0;
         StringBuilder sb = new StringBuilder(s);
         for(int i=0; i<off; i++){
@@ -81,7 +81,7 @@ public class CryptUtils {
     }
 
     public static String padWithSpacesMultiple(String s, int mult){
-        int desiredlength = (s.length()/mult+2)*mult;
+        int desiredlength = (s.getBytes().length/mult+2)*mult;
         return padWithSpaces(s, desiredlength);
     }
 

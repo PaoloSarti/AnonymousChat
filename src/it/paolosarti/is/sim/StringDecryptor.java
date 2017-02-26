@@ -3,6 +3,7 @@ package it.paolosarti.is.sim;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.util.Base64;
@@ -26,7 +27,7 @@ public class StringDecryptor extends StringCrypto{
         try {
             byte[] original = cipher.update(Base64.getDecoder()
                     .decode(encrypted.getBytes("UTF-8")));
-            return new String(original).trim();
+            return new String(original, StandardCharsets.UTF_8).trim();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
